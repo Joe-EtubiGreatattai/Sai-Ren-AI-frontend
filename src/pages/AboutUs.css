@@ -1,0 +1,51 @@
+/* AboutUs.css */
+
+.about-us {
+    padding: 20px;
+    background-color: #f8f9fa;
+    max-width: 800px;
+    margin: auto;
+  }
+  
+  .about-title {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+    text-align: center;
+    color: #1F6CAE;
+  }
+  
+  section {
+    margin-bottom: 40px;
+  }
+  
+  h3 {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #343a40;
+  }
+  
+  p {
+    font-size: 1.1rem;
+    line-height: 1.5;
+    color: #495057;
+  }
+  
+  .about-image {
+    width: 100%;
+    height: auto;
+    margin: 20px 0;
+    border-radius: 8px;
+  }
+  
+  ul {
+    padding-left: 20px;
+    color: #495057;
+  }
+  
+  ul li {
+    margin: 5px 0;
+    font-size: 1.1rem;
+  }
+  

@@ -1,0 +1,91 @@
+/* src/components/Navbar.css */
+
+nav {
+    background: #000; /* Navbar background color */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    position: relative;
+  }
+  
+  .logo {
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  .animated-logo {
+    font-family: 'Dancing Script', cursive;
+    color: white;
+    margin: 0;
+    font-size: 2rem;
+  }
+  
+  .nav-links {
+    list-style: none;
+    display: flex;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .nav-links li {
+    margin: 0 1rem;
+  }
+  
+  .nav-links a {
+    color: white;
+    text-decoration: none;
+    font-size: 1rem;
+    transition: color 0.3s;
+  }
+  
+  .nav-links a:hover {
+    color: #ffdd57; /* Change color on hover */
+  }
+  
+  .nav-links a.active {
+    border-bottom: 2px solid #ffdd57; /* Underline for active link */
+  }
+  
+  /* Hamburger menu styles */
+  .menu-toggle {
+    display: none;
+    flex-direction: column;
+    cursor: pointer;
+  }
+  
+  .menu-toggle .bar {
+    height: 4px;
+    width: 25px;
+    background: white;
+    margin: 4px 0;
+    transition: 0.3s;
+  }
+  
+  /* Responsive styles */
+  @media (max-width: 768px) {
+    .nav-links {
+      position: absolute;
+      top: 60px; /* Adjust based on navbar height */
+      right: 0;
+      background: #333;
+      flex-direction: column;
+      width: 100%;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease-out;
+    }
+  
+    .nav-links.active {
+      max-height: 300px; /* Adjust as necessary for your links */
+    }
+  
+    .menu-toggle {
+      display: flex;
+    }
+  
+    .nav-links li {
+      margin: 1rem 0;
+      text-align: center;
+    }
+  }
+  
