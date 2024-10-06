@@ -15,7 +15,7 @@ const Navbar = () => {
   return (
     <nav>
       <div className="logo">
-        <h1 className="animated-logo">Ludin Shoes</h1>
+        <h1 className="animated-logo">Ludin Store</h1>
       </div>
       <div className={`menu-toggle ${isMenuOpen ? 'active' : ''}`} onClick={toggleMenu}>
         <div className="bar"></div>

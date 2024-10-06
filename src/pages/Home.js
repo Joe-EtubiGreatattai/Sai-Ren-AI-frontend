@@ -12,7 +12,7 @@ const Home = () => {
   return (
     <div className="home">
       <header className="hero">
-        <h1>Welcome to Ludin Shoes!</h1>
+        <h1>Welcome to Ludin St!</h1>
         <p>Your one-stop shop for stylish and comfortable footwear.</p>
         <button className="shop-now">Shop Now</button>
       </header>
@@ -40,11 +40,7 @@ const Home = () => {
             <h3>Sports Shoes</h3>
             <p>Get the edge in your game with our performance-driven sports shoes.</p>
           </div>
-          <div className="product">
-            <img src={bootsImage} alt="Boots" />
-            <h3>Boots</h3>
-            <p>Conquer the elements with our stylish and durable boots.</p>
-          </div>
+         
         </div>
       </section>
 

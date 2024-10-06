@@ -7,7 +7,6 @@ import valuesImage from '../assets/values.jpg'; // Replace with an actual image 
 const AboutUs = () => {
   return (
     <div className="about-us">
-      <h2 className="about-title">About Us</h2>
       <section className="mission">
         <h3>Our Mission</h3>
         <p>
