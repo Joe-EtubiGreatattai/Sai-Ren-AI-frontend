@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { v4 as uuidv4 } from "uuid";
+import { Maximize2, Minimize2 } from 'lucide-react';
 import {
   ChatButton,
   PulsingCircle,
@@ -14,6 +15,11 @@ import {
   HideButton,
   UserMessage,
   AIMessage,
+  SearchResultContainer,
+  SearchResultItem,
+  SearchResultImage,
+  SearchResultDetails,
+  SizeToggleButton,
 } from "./AmorphousChatStyles";
 
 const popupMessages = [
@@ -30,6 +36,7 @@ const greetingMessages = [
 
 const AmorphousChat = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
   const [userMessage, setUserMessage] = useState("");
   const [messages, setMessages] = useState([]);
   const [showPopup, setShowPopup] = useState(false);
@@ -43,7 +50,6 @@ const AmorphousChat = () => {
   const toggleChat = () => {
     setIsOpen((prevIsOpen) => {
       if (!prevIsOpen) {
-        // If opening the chat, add a greeting message if there are no messages
         if (messages.length === 0) {
           const greetingMessage =
             greetingMessages[
@@ -58,6 +64,10 @@ const AmorphousChat = () => {
       }
       return !prevIsOpen;
     });
+  };
+
+  const toggleSize = () => {
+    setIsExpanded((prevIsExpanded) => !prevIsExpanded);
   };
 
   const handleInputChange = (event) => setUserMessage(event.target.value);
@@ -88,7 +98,7 @@ const AmorphousChat = () => {
       setMessages((prevMessages) => [...prevMessages, loadingMessage]);
 
       try {
-        const response = await fetch("https://sai-ren-ai-backend.onrender.com/ai-agent", {
+        const response = await fetch("http://localhost:5000/ai-agent", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -107,7 +117,17 @@ const AmorphousChat = () => {
         const data = await response.json();
 
         console.log(data);
-        const aiMessage = { text: data.reply, sender: "ai" };
+        let aiMessage;
+
+        if (data.results && data.results.length > 0) {
+          aiMessage = {
+            text: data.reply,
+            sender: "ai",
+            searchResults: data.results,
+          };
+        } else {
+          aiMessage = { text: data.reply, sender: "ai" };
+        }
 
         setMessages((prevMessages) =>
           prevMessages.filter((msg) => !msg.isLoading).concat(aiMessage)
@@ -164,7 +184,7 @@ const AmorphousChat = () => {
           popupMessages[Math.floor(Math.random() * popupMessages.length)];
         showPopupMessage(randomMessage);
       }
-    }, 30000); // Show a popup message every 30 seconds
+    }, 30000);
   };
 
   useEffect(() => {
@@ -176,12 +196,10 @@ const AmorphousChat = () => {
 
     document.addEventListener("mousedown", handleClickOutside);
 
-    // Show initial popup message immediately
     const initialMessage =
       popupMessages[Math.floor(Math.random() * popupMessages.length)];
     showPopupMessage(initialMessage);
 
-    // Start the interval for subsequent popups
     startPopupInterval();
 
     return () => {
@@ -232,14 +250,36 @@ const AmorphousChat = () => {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 20 }}
           transition={{ duration: 0.3 }}
+          $isExpanded={isExpanded}
         >
-          <ChatHeader>Sai Ren AI</ChatHeader>
+          <ChatHeader>
+            Sai Ren AI
+            <SizeToggleButton onClick={toggleSize}>
+              {isExpanded ? <Minimize2 size={18} /> : <Maximize2 size={18} />}
+            </SizeToggleButton>
+          </ChatHeader>
           <ChatMessages ref={chatMessagesRef}>
             {messages.map((msg, index) =>
               msg.sender === "user" ? (
                 <UserMessage key={index}>{msg.text}</UserMessage>
               ) : (
-                <AIMessage key={index}>{msg.text}</AIMessage>
+                <AIMessage key={index}>
+                  {msg.text}
+                  {msg.searchResults && (
+                    <SearchResultContainer>
+                      {msg.searchResults.map((result, resultIndex) => (
+                        <SearchResultItem key={resultIndex}>
+                          <SearchResultImage src={result.images[0]} alt={result.title} />
+                          <SearchResultDetails>
+                            <h4>{result.title}</h4>
+                            <p>Price: ${result.price}</p>
+                            <p>Rating: {result.rating}/5</p>
+                          </SearchResultDetails>
+                        </SearchResultItem>
+                      ))}
+                    </SearchResultContainer>
+                  )}
+                </AIMessage>
               )
             )}
           </ChatMessages>

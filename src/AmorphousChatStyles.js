@@ -35,25 +35,45 @@ export const PulsingCircle = styled.div`
   animation: ${pulse} 2s ease-in-out infinite;
 `;
 
+export const SizeToggleButton = styled.button`
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #ffffff;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+`;
+
 export const ChatInterface = styled(motion.div)`
   position: fixed;
   bottom: 80px;
   right: 20px;
-  width: 300px;
-  height: 400px;
-  background: white;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  width: ${props => props.$isExpanded ? '400px' : '300px'};
+  height: ${props => props.$isExpanded ? '600px' : '400px'};
+  max-width: 90vw;
+  background-color: #ffffff;
   border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  transition: width 0.3s, height 0.3s;
 `;
 
 export const ChatHeader = styled.div`
-  background: #0084ff;
-  color: white;
-  padding: 10px;
+  background-color: #007bff;
+  color: #ffffff;
+  padding: 10px 15px;
   font-weight: bold;
+  position: relative;
 `;
 
 export const ChatMessages = styled.div`
@@ -144,4 +164,40 @@ export const AIMessage = styled.div`
   align-self: flex-start;
   background-color: #f0f0f0;
   color: black;
+`;
+
+export const SearchResultContainer = styled.div`
+  margin-top: 10px;
+  border-top: 1px solid #e0e0e0;
+  padding-top: 10px;
+`;
+
+export const SearchResultItem = styled.div`
+  display: flex;
+  margin-bottom: 10px;
+  padding: 10px;
+  background-color: #f5f5f5;
+  border-radius: 5px;
+`;
+
+export const SearchResultImage = styled.img`
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  margin-right: 10px;
+`;
+
+export const SearchResultDetails = styled.div`
+  flex: 1;
+
+  h4 {
+    margin: 0 0 5px 0;
+    font-size: 14px;
+  }
+
+  p {
+    margin: 0;
+    font-size: 12px;
+    color: #666;
+  }
 `;

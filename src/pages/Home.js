@@ -47,7 +47,7 @@ const Home = () => {
       <section className="about-us">
         <h2>About Us</h2>
         <p>
-          At Ludin Shoes, we are passionate about footwear. Our mission is to provide high-quality shoes 
+          At Ludin Store, we are passionate about footwear. Our mission is to provide high-quality shoes 
           that combine comfort, style, and durability. Whether you're looking for casual wear, formal attire, 
           or athletic performance, we have the perfect pair for you.
         </p>
@@ -61,7 +61,7 @@ const Home = () => {
       <section className="customer-reviews">
         <h2>What Our Customers Say</h2>
         <blockquote>
-          <p>"I love Ludin Shoes! They have the best selection and the customer service is outstanding!"</p>
+          <p>"I love Ludin Store! They have the best selection and the customer service is outstanding!"</p>
           <cite>- Sarah K.</cite>
         </blockquote>
         <blockquote>

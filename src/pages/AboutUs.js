@@ -10,7 +10,7 @@ const AboutUs = () => {
       <section className="mission">
         <h3>Our Mission</h3>
         <p>
-          At Ludin Shoes, our mission is to provide high-quality footwear that combines comfort, style, and durability.
+          At Ludin Store, our mission is to provide high-quality footwear that combines comfort, style, and durability.
           We believe that the right pair of shoes can transform not just your look but your confidence and lifestyle.
         </p>
       </section>
@@ -19,7 +19,7 @@ const AboutUs = () => {
         <h3>Our History</h3>
         <img src={historyImage} alt="Our History" className="about-image" />
         <p>
-          Founded in 2010, Ludin Shoes started as a small family-owned business with a vision to redefine how people 
+          Founded in 2010, Ludin Store started as a small family-owned business with a vision to redefine how people 
           shop for shoes. Over the years, we have grown into a reputable store, known for our diverse collection and 
           exceptional customer service.
         </p>

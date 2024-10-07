@@ -7,7 +7,7 @@ const Footer = () => {
   return (
     <footer className="footer">
       <div className="footer-content">
-        <p>&copy; {new Date().getFullYear()} Ludin Shoes. All Rights Reserved.</p>
+        <p>&copy; {new Date().getFullYear()} Ludin Store. All Rights Reserved.</p>
         <ul className="footer-links">
           <li>
             <a href="/">Privacy Policy</a>
