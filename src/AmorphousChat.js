@@ -253,7 +253,7 @@ const AmorphousChat = () => {
           $isExpanded={isExpanded}
         >
           <ChatHeader>
-            Sia-ren AI
+          Sia-ren AI
             <SizeToggleButton onClick={toggleSize}>
               {isExpanded ? <Minimize2 size={18} /> : <Maximize2 size={18} />}
             </SizeToggleButton>
