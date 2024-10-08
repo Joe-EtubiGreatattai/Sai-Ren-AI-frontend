@@ -25,7 +25,7 @@ import {
 const popupMessages = [
   "Looking for assistance? I'm here to help!",
   "Have a question? Just ask me!",
-  "Sai Ren AI at your service!",
+  "Sia-ren AI at your service!",
 ];
 
 const greetingMessages = [
@@ -253,7 +253,7 @@ const AmorphousChat = () => {
           $isExpanded={isExpanded}
         >
           <ChatHeader>
-            Sai Ren AI
+            Sia-ren AI
             <SizeToggleButton onClick={toggleSize}>
               {isExpanded ? <Minimize2 size={18} /> : <Maximize2 size={18} />}
             </SizeToggleButton>
