@@ -109,7 +109,7 @@ const AmorphousChat = () => {
       setMessages((prevMessages) => [...prevMessages, loadingMessage]);
 
       try {
-        const response = await fetch("http://localhost:5000/ai-agent", {
+        const response = await fetch("https://sai-ren-ai-backend.onrender.com/ai-agent", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
