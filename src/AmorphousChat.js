@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { v4 as uuidv4 } from "uuid";
-import { Maximize2, Minimize2 } from 'lucide-react';
+import { Maximize2, Minimize2, ShoppingCart } from 'lucide-react';
 import {
   ChatButton,
   PulsingCircle,
@@ -20,12 +20,19 @@ import {
   SearchResultImage,
   SearchResultDetails,
   SizeToggleButton,
+  CartButton,
+  CartCount,
+  CartContainer,
+  CartItem,
+  CartTotal,
+  CheckoutButton,
 } from "./AmorphousChatStyles";
 
 const popupMessages = [
   "Looking for assistance? I'm here to help!",
   "Have a question? Just ask me!",
   "Sia-ren AI at your service!",
+  "Don't forget about the items in your cart!",
 ];
 
 const greetingMessages = [
@@ -42,6 +49,10 @@ const AmorphousChat = () => {
   const [showPopup, setShowPopup] = useState(false);
   const [popupMessage, setPopupMessage] = useState("");
   const [isUserInteracting, setIsUserInteracting] = useState(false);
+  const [cart, setCart] = useState([]);
+  const [showCart, setShowCart] = useState(false);
+  const [lastCartReminder, setLastCartReminder] = useState(null);
+  
   const popupRef = useRef(null);
   const popupTimerRef = useRef(null);
   const chatMessagesRef = useRef(null);
@@ -98,7 +109,7 @@ const AmorphousChat = () => {
       setMessages((prevMessages) => [...prevMessages, loadingMessage]);
 
       try {
-        const response = await fetch("https://sai-ren-ai-backend.onrender.com/ai-agent", {
+        const response = await fetch("http://localhost:5000/ai-agent", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -180,11 +191,55 @@ const AmorphousChat = () => {
 
     popupIntervalRef.current = setInterval(() => {
       if (!isOpen && !showPopup) {
-        const randomMessage =
-          popupMessages[Math.floor(Math.random() * popupMessages.length)];
-        showPopupMessage(randomMessage);
+        if (cart.length > 0 && (!lastCartReminder || Date.now() - lastCartReminder > 3600000)) {
+          showPopupMessage("Don't forget about the items in your cart!");
+          setLastCartReminder(Date.now());
+        } else {
+          const randomMessage =
+            popupMessages[Math.floor(Math.random() * popupMessages.length)];
+          showPopupMessage(randomMessage);
+        }
       }
     }, 30000);
+  };
+
+  const addToCart = (item) => {
+    setCart((prevCart) => {
+      const existingItem = prevCart.find((cartItem) => cartItem.id === item.id);
+      if (existingItem) {
+        return prevCart.map((cartItem) =>
+          cartItem.id === item.id
+            ? { ...cartItem, quantity: cartItem.quantity + 1 }
+            : cartItem
+        );
+      } else {
+        return [...prevCart, { ...item, quantity: 1 }];
+      }
+    });
+  };
+
+  const removeFromCart = (itemId) => {
+    setCart((prevCart) => prevCart.filter((item) => item.id !== itemId));
+  };
+
+  const updateCartItemQuantity = (itemId, newQuantity) => {
+    setCart((prevCart) =>
+      prevCart.map((item) =>
+        item.id === itemId ? { ...item, quantity: newQuantity } : item
+      )
+    );
+  };
+
+  const calculateTotal = () => {
+    return cart.reduce((total, item) => total + item.price * item.quantity, 0);
+  };
+
+  const handleCheckout = () => {
+    // Implement checkout logic here
+    console.log("Proceeding to checkout with items:", cart);
+    // Clear the cart after checkout
+    setCart([]);
+    setShowCart(false);
   };
 
   useEffect(() => {
@@ -253,46 +308,76 @@ const AmorphousChat = () => {
           $isExpanded={isExpanded}
         >
           <ChatHeader>
-          Sia-ren AI
+            Sia-ren AI
             <SizeToggleButton onClick={toggleSize}>
               {isExpanded ? <Minimize2 size={18} /> : <Maximize2 size={18} />}
             </SizeToggleButton>
+            <CartButton onClick={() => setShowCart(!showCart)}>
+              <ShoppingCart size={18} />
+              {cart.length > 0 && <CartCount>{cart.length}</CartCount>}
+            </CartButton>
           </ChatHeader>
-          <ChatMessages ref={chatMessagesRef}>
-            {messages.map((msg, index) =>
-              msg.sender === "user" ? (
-                <UserMessage key={index}>{msg.text}</UserMessage>
-              ) : (
-                <AIMessage key={index}>
-                  {msg.text}
-                  {msg.searchResults && (
-                    <SearchResultContainer>
-                      {msg.searchResults.map((result, resultIndex) => (
-                        <SearchResultItem key={resultIndex}>
-                          <SearchResultImage src={result.images[0]} alt={result.title} />
-                          <SearchResultDetails>
-                            <h4>{result.title}</h4>
-                            <p>Price: ${result.price}</p>
-                            <p>Rating: {result.rating}/5</p>
-                          </SearchResultDetails>
-                        </SearchResultItem>
-                      ))}
-                    </SearchResultContainer>
-                  )}
-                </AIMessage>
-              )
-            )}
-          </ChatMessages>
-          <ChatInputContainer>
-            <ChatInput
-              type="text"
-              placeholder="Type a message..."
-              value={userMessage}
-              onChange={handleInputChange}
-              onKeyDown={(e) => e.key === "Enter" && handleSendMessage()}
-            />
-            <SendButton onClick={handleSendMessage}>→</SendButton>
-          </ChatInputContainer>
+          {showCart ? (
+            <CartContainer>
+              {cart.map((item) => (
+                <CartItem key={item.id}>
+                  <img src={item.images[0]} alt={item.title} width="50" height="50" />
+                  <div>
+                    <h4>{item.title}</h4>
+                    <p>Price: ${item.price}</p>
+                    <input
+                      type="number"
+                      min="1"
+                      value={item.quantity}
+                      onChange={(e) => updateCartItemQuantity(item.id, parseInt(e.target.value))}
+                    />
+                  </div>
+                  <button onClick={() => removeFromCart(item.id)}>Remove</button>
+                </CartItem>
+              ))}
+              <CartTotal>Total: ${calculateTotal().toFixed(2)}</CartTotal>
+              <CheckoutButton onClick={handleCheckout}>Checkout</CheckoutButton>
+            </CartContainer>
+          ) : (
+            <>
+              <ChatMessages ref={chatMessagesRef}>
+                {messages.map((msg, index) =>
+                  msg.sender === "user" ? (
+                    <UserMessage key={index}>{msg.text}</UserMessage>
+                  ) : (
+                    <AIMessage key={index}>
+                      {msg.text}
+                      {msg.searchResults && (
+                        <SearchResultContainer>
+                          {msg.searchResults.map((result, resultIndex) => (
+                            <SearchResultItem key={resultIndex}>
+                              <SearchResultImage src={result.images[0]} alt={result.title} />
+                              <SearchResultDetails>
+                                <h4>{result.title}</h4>
+                                <p>Price: ${result.price}</p>
+                                <p>Rating: {result.rating}/5</p>
+                                <button onClick={() => addToCart(result)}>Add to Cart</button>
+                              </SearchResultDetails>
+                            </SearchResultItem>
+                          ))}
+                        </SearchResultContainer>
+                      )}
+                    </AIMessage>
+                  )
+                )}
+              </ChatMessages>
+              <ChatInputContainer>
+                <ChatInput
+                  type="text"
+                  placeholder="Type a message..."
+                  value={userMessage}
+                  onChange={handleInputChange}
+                  onKeyDown={(e) => e.key === "Enter" && handleSendMessage()}
+                />
+                <SendButton onClick={handleSendMessage}>→</SendButton>
+              </ChatInputContainer>
+            </>
+          )}
         </ChatInterface>
       )}
     </motion.div>
